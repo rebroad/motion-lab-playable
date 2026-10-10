@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#10171c" />
+    <meta name="description" content="Play Pat Kerr's Motion Lab physics playground." />
+    <title>Motion Lab · Physics playground</title>
+    <style>
+      :root { color-scheme: dark; background: #10171c; font: 14px/1.5 system-ui, sans-serif; color: #dbe5e9; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      main { position: fixed; inset: 0; }
+      iframe { display: block; width: 100%; height: 100%; border: 0; background: #10171c; }
+      .open-original {
+        position: fixed; z-index: 2; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
+        padding: 7px 11px; border: 1px solid #71858d; border-radius: 999px;
+        color: #e5eeee; background: rgb(16 23 28 / 82%); text-decoration: none;
+        font-size: 12px; backdrop-filter: blur(8px);
+      }
+      .open-original:hover, .open-original:focus-visible { background: #2b4049; }
+      .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    </style>
+  </head>
+  <body>
+    <main aria-label="Motion Lab playable demo">
+      <iframe
+        src="https://patkerr.co.uk/motion-lab/"
+        title="Motion Lab interactive physics playground by Pat Kerr"
+        allow="fullscreen"
+        allowfullscreen
+      ></iframe>
+    </main>
+    <a class="open-original" href="https://patkerr.co.uk/motion-lab/" target="_blank" rel="noopener noreferrer">Open original ↗</a>
+  </body>
+</html>
