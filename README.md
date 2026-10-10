@@ -1,11 +1,11 @@
 # Motion Lab Playable
 
-A small GitHub Pages launcher for [Motion Lab](https://patkerr.co.uk/motion-lab/), Pat Kerr's interactive 2D vehicle-physics playground. Open the Pages URL and the original app loads directly in a full-window frame.
+A self-contained GitHub Pages copy of Pat Kerr's interactive 2D vehicle-physics playground. The HTML, CSS, and JavaScript modules are served by this repository; the app does not need the original website or third-party runtime assets to load and play.
 
-## Attribution and scope
+## Attribution
 
-Motion Lab and its source remain the work of Pat Kerr. This repository contains only an HTML embed/launcher; it does not redistribute or modify the app's source files. The playable experience therefore depends on the original site remaining available and permitting embedding. The **Open original** link is provided as a direct fallback.
+Motion Lab was created by Pat Kerr. The source is republished here with the rights holder's authorization. The in-app **Site** link is only outbound navigation to Pat Kerr's homepage; it is not required by the game.
 
 ## Deployment
 
-GitHub Pages serves `index.html` from the `main` branch root. No build step or dependencies are required.
+GitHub Pages serves `index.html` from the `main` branch root. The app is plain HTML, CSS, and JavaScript and requires no build step or dependencies.

@@ -1,36 +1,200 @@
 <!doctype html>
 <html lang="en">
-  <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#10171c" />
-    <meta name="description" content="Play Pat Kerr's Motion Lab physics playground." />
-    <title>Motion Lab · Physics playground</title>
-    <style>
-      :root { color-scheme: dark; background: #10171c; font: 14px/1.5 system-ui, sans-serif; color: #dbe5e9; }
-      * { box-sizing: border-box; }
-      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-      main { position: fixed; inset: 0; }
-      iframe { display: block; width: 100%; height: 100%; border: 0; background: #10171c; }
-      .open-original {
-        position: fixed; z-index: 2; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
-        padding: 7px 11px; border: 1px solid #71858d; border-radius: 999px;
-        color: #e5eeee; background: rgb(16 23 28 / 82%); text-decoration: none;
-        font-size: 12px; backdrop-filter: blur(8px);
-      }
-      .open-original:hover, .open-original:focus-visible { background: #2b4049; }
-      .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-    </style>
-  </head>
-  <body>
-    <main aria-label="Motion Lab playable demo">
-      <iframe
-        src="https://patkerr.co.uk/motion-lab/"
-        title="Motion Lab interactive physics playground by Pat Kerr"
-        allow="fullscreen"
-        allowfullscreen
-      ></iframe>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>Motion Lab · Interactive physics playground</title>
+    <link rel="stylesheet" href="style.css?v=0.8.2" />
+    <header>
+        <div>
+            <small>CANVAS / NATIVE ES MODULES</small>
+            <h1>Motion Lab<span> / physics playground</span></h1>
+        </div>
+        <div class="header-actions">
+            <a class="site-back" href="https://patkerr.co.uk/" aria-label="Back to Pat Kerr homepage">← <span>Site</span></a>
+            <div
+                class="environment-controls header-environment"
+                role="group"
+                aria-label="Environment"
+            >
+                <button
+                    id="barrier"
+                    class="environment-toggle"
+                    aria-label="Barrier off · B"
+                    aria-pressed="false"
+                >
+                    <span class="environment-short"
+                        >B · <span class="environment-state">off</span></span
+                    >
+                </button>
+                <button
+                    id="gravity"
+                    class="environment-toggle"
+                    aria-label="Gravity off · G"
+                    aria-pressed="false"
+                >
+                    <span class="environment-short"
+                        >G · <span class="environment-state">off</span></span
+                    >
+                </button>
+                <button
+                    id="dead-zone-mini"
+                    class="environment-toggle"
+                    aria-label="Dead Zone on · Z"
+                    aria-pressed="true"
+                >
+                    <span class="environment-short"
+                        >Z · <span class="environment-state">on</span></span
+                    >
+                </button>
+                <button
+                    id="speed-zoom-mini"
+                    class="environment-toggle"
+                    aria-label="Speed Zoom on · X"
+                    aria-pressed="true"
+                >
+                    <span class="environment-short"
+                        >X · <span class="environment-state">on</span></span
+                    >
+                </button>
+            </div>
+            <button id="reset">Reset · R</button>
+            <button
+                id="settings-toggle"
+                class="compact-only"
+                aria-expanded="false"
+                aria-controls="settings"
+            >
+                Settings
+            </button>
+        </div>
+    </header>
+    <main>
+        <aside id="settings">
+            <h2>01 / Configuration</h2>
+            <div class="modes">
+                <button data-mode="car">1 · Car</button><button data-mode="ship">2 · Ship</button
+                ><button data-mode="brick">3 · Brick</button>
+            </div>
+            <h2>02 / Controls</h2>
+            <p id="help"></p>
+            <div class="settings-toggle-row" role="group" aria-label="Environment">
+                <button id="barrier-settings" aria-pressed="false">Barrier <kbd>B</kbd></button>
+                <button id="gravity-settings" aria-pressed="false">Gravity <kbd>G</kbd></button>
+            </div>
+            <div class="config-actions">
+                <button id="fullscreen-toggle" class="shortcut-toggle" aria-pressed="false">
+                    <span>Fullscreen</span><kbd>F</kbd>
+                </button>
+                <button id="inputs-toggle" class="shortcut-toggle" aria-pressed="false">
+                    <span>Input HUD</span><kbd>H</kbd>
+                </button>
+            </div>
+            <p id="fullscreen-status" class="visually-hidden" role="status" aria-live="polite"></p>
+            <div class="camera-controls" role="group" aria-label="Camera behaviour">
+                <button id="dead-zone" aria-pressed="true">Dead Zone <kbd>Z</kbd></button>
+                <button id="speed-zoom" aria-pressed="true">Speed Zoom <kbd>X</kbd></button>
+            </div>
+            <div id="ship-settings" class="mode-settings" hidden>
+                <label id="ship-controls"
+                    >Ship controls<select id="ship-control-mode">
+                        <option value="classic">Classic · rotate head</option>
+                        <option value="physical">Physical · side thrusters</option>
+                    </select></label
+                >
+            </div>
+            <div id="brick-settings" class="mode-settings" hidden>
+                <label id="brick-controls"
+                    >Brick tool<select id="tool">
+                        <option value="impulse">Impulse · I · release to fire</option>
+                        <option value="force" selected>Force · T · hold to apply</option>
+                    </select></label
+                >
+            </div>
+            <div id="car-settings" class="mode-settings" hidden>
+                <label for="acceleration"
+                    >Car acceleration ·
+                    <output id="acceleration-value" for="acceleration">1.5× original</output></label
+                >
+                <input
+                    id="acceleration"
+                    aria-label="Car acceleration"
+                    type="range"
+                    min="0.5"
+                    max="3"
+                    step="0.1"
+                    value="1.5"
+                />
+                <label for="handbrake-strength"
+                    >Handbrake strength ·
+                    <output id="handbrake-value" for="handbrake-strength">75%</output></label
+                >
+                <input
+                    id="handbrake-strength"
+                    aria-label="Handbrake strength"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="5"
+                    value="75"
+                />
+            </div>
+            <label for="trail-lifetime"
+                >Trail lifetime ·
+                <output id="trail-value" for="trail-lifetime">50% · 12 s</output></label
+            >
+            <input
+                id="trail-lifetime"
+                aria-label="Trail lifetime"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                value="50"
+            />
+            <h2>03 / Live state</h2>
+            <pre id="stats"></pre>
+            <label
+                >Touch controls
+                <select id="touch-layout">
+                    <option value="auto">Automatic</option>
+                    <option value="on">Always show</option>
+                    <option value="off">Hide</option>
+                </select>
+            </label>
+        </aside>
+        <section id="play-area" aria-label="Play area">
+            <div class="canvas-area">
+                <canvas id="game" tabindex="0" aria-label="Physics playground"></canvas>
+                <div id="pause-overlay" hidden>
+                    <div class="pause-card">
+                        <p role="status">Paused</p>
+                        <button id="resume">Resume simulation</button>
+                        <small>Or press P</small>
+                    </div>
+                </div>
+                <div id="input-hud" hidden aria-label="Live input display">
+                    <span data-indicator="left">Left</span><span data-indicator="right">Right</span>
+                    <span data-indicator="accel">Accel</span
+                    ><span data-indicator="decel">Decel</span>
+                    <span data-indicator="action">Handbrake</span>
+                </div>
+                <div class="caption">
+                    <span id="version">Motion Lab · v0.8.2</span>
+                    <span id="camera-caption">Camera follows body</span>
+                </div>
+            </div>
+            <div id="touch-controls" class="touch-only" aria-label="Driving controls">
+                <div class="steering-controls">
+                    <button data-control="left" aria-label="Steer left">◀<br />Left</button>
+                    <button data-control="right" aria-label="Steer right">▶<br />Right</button>
+                </div>
+                <div class="pedal-controls">
+                    <button data-control="accel">Accel</button>
+                    <button data-control="decel">Decel</button>
+                    <button data-control="action">Handbrake</button>
+                </div>
+            </div>
+        </section>
     </main>
-    <a class="open-original" href="https://patkerr.co.uk/motion-lab/" target="_blank" rel="noopener noreferrer">Open original ↗</a>
-  </body>
+    <script type="module" src="src/main.js?v=0.8.2"></script>
 </html>

@@ -1,0 +1,614 @@
+:root {
+    color-scheme: dark;
+    font:
+        14px/1.6 system-ui,
+        sans-serif;
+    color: #dbe5e9;
+    background: #10171c;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid #2a3941;
+}
+small {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #85b8b4;
+}
+h1 {
+    font-size: 25px;
+    font-weight: 500;
+    margin: 2px 0;
+}
+h1 span {
+    color: #738791;
+    font-size: 16px;
+}
+main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100dvh - 100px);
+    min-height: 520px;
+}
+aside {
+    padding: 20px 24px;
+    border-right: 1px solid #2a3941;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+h2 {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 18px 0 12px;
+    color: #91a5ae;
+}
+p {
+    color: #9bafb8;
+    font-size: 13px;
+}
+button,
+select {
+    font: inherit;
+    color: inherit;
+    background: #1c2a32;
+    border: 1px solid #3b505c;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+button:hover {
+    background: #2b4049;
+}
+button.active {
+    border-color: #8ce6c5;
+    color: #8ce6c5;
+    background: #193730;
+}
+.modes {
+    display: flex;
+    gap: 5px;
+}
+.modes button {
+    flex: 1 1 0;
+    padding: 8px;
+}
+#fullscreen-toggle {
+    width: fit-content;
+}
+.config-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+}
+.config-actions button {
+    flex: 1 1 0;
+    min-width: 0;
+}
+.config-actions .shortcut-toggle {
+    margin: 0;
+}
+.shortcut-toggle span {
+    flex: 1;
+    text-align: left;
+}
+label {
+    display: block;
+    font-size: 12px;
+    color: #a4b7bf;
+    margin: 16px 0;
+}
+select,
+input {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+}
+input {
+    accent-color: #8ce6c5;
+}
+pre {
+    font:
+        12px/1.9 ui-monospace,
+        monospace;
+    color: #8ce6c5;
+}
+.note {
+    font-size: 11px;
+    color: #6f8792;
+}
+section {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+}
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    outline: none;
+}
+.caption {
+    position: absolute;
+    bottom: 18px;
+    left: 22px;
+    right: 22px;
+    pointer-events: none;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #77929f;
+}
+.caption span {
+    float: right;
+}
+@media (max-width: 700px) {
+    header {
+        padding: 16px;
+        height: 85px;
+    }
+    h1 span {
+        display: none;
+    }
+    main {
+        height: auto;
+        grid-template-columns: 1fr;
+    }
+    aside {
+        border-right: 0;
+        display: block;
+    }
+    section {
+        height: 60dvh;
+        min-height: 350px;
+    }
+}
+[hidden] {
+    display: none !important;
+}
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.environment-controls {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+.header-environment {
+    margin: 0;
+    display: flex;
+    gap: 6px;
+}
+.header-environment .environment-toggle {
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+.environment-controls button {
+    padding: 8px 3px;
+    font-size: 12px;
+}
+.environment-controls button[aria-pressed='true'] {
+    border-color: #8ce6c5;
+    color: #8ce6c5;
+    background: #193730;
+}
+.camera-controls {
+    margin: 10px 0 18px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+.settings-toggle-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+}
+.settings-toggle-row button,
+.camera-controls button,
+.shortcut-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    height: 44px;
+    min-height: 44px;
+    padding: 8px 5px;
+    font-size: 12px;
+}
+.camera-controls kbd,
+.settings-toggle-row kbd,
+.shortcut-toggle kbd {
+    padding: 0 4px;
+    border: 1px solid #3b505c;
+    border-radius: 3px;
+    color: #9bafb8;
+    font:
+        10px/1.5 ui-monospace,
+        monospace;
+}
+.settings-toggle-row button[aria-pressed='true'],
+.camera-controls button[aria-pressed='true'],
+.shortcut-toggle[aria-pressed='true'] {
+    border-color: #658d82;
+    color: #b3d8ca;
+    background: #1a302a;
+}
+.shortcut-toggle {
+    width: auto;
+}
+
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+aside {
+    min-width: 0;
+}
+.mode-settings {
+    padding: 1px 10px 2px;
+    margin: 8px -10px 12px;
+    border-left: 2px solid #33464e;
+    background: #152027;
+}
+.mode-settings label:first-child {
+    margin-top: 12px;
+}
+
+/* Compact viewports keep the game first; settings become a dismissible panel. */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.compact-only,
+.touch-only {
+    display: none;
+}
+.canvas-area {
+    position: relative;
+    height: 100%;
+    min-height: 0;
+}
+#input-hud {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    pointer-events: none;
+}
+#input-hud span {
+    padding: 4px 7px;
+    background: #10171ce6;
+    border: 1px solid #48606d;
+    border-radius: 4px;
+    font:
+        11px ui-monospace,
+        monospace;
+}
+#input-hud span.active,
+#touch-controls button.active {
+    background: #8ce6c5;
+    border-color: #b7ffe5;
+    color: #102b24;
+}
+.touch-enabled .touch-only {
+    display: block;
+}
+.touch-enabled #touch-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+#touch-controls {
+    position: absolute;
+    inset: auto 0 max(44px, env(safe-area-inset-bottom));
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+#touch-controls button {
+    pointer-events: auto;
+    touch-action: none;
+    min-width: 60px;
+    min-height: 60px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #1c2a32ed;
+    border: 2px solid #709391;
+}
+#pause-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    background: #08101699;
+    padding: 12px;
+}
+.pause-card {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 20px 28px;
+    border: 2px solid #ffdf93;
+    border-radius: 12px;
+    background: #10171cf5;
+    box-shadow: 0 8px 40px #0008;
+}
+.pause-card p {
+    margin: 0;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffdf93;
+}
+.pause-card button {
+    min-height: 48px;
+    background: #ffdf93;
+    color: #10171c;
+    font-weight: 700;
+}
+.pause-card small {
+    color: #c2d1d9;
+}
+.steering-controls {
+    display: flex;
+    align-items: end;
+    gap: 8px;
+}
+.pedal-controls {
+    display: grid;
+    grid-template-columns: minmax(60px, 80px) minmax(76px, 100px);
+    grid-template-rows: repeat(2, 60px);
+    gap: 8px;
+}
+.pedal-controls [data-control='action'] {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    font-size: 12px;
+    padding: 8px 4px;
+}
+button:focus-visible,
+select:focus-visible {
+    outline: 2px solid #ffdf93;
+    outline-offset: -2px;
+}
+canvas:focus-visible ~ .caption::before {
+    content: 'Playfield focused · ';
+    color: #ffdf93;
+}
+@media (max-width: 1000px), (max-height: 600px) {
+    header {
+        height: 64px;
+        padding: 8px max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
+    }
+    header small,
+    h1 span {
+        display: none;
+    }
+    h1 {
+        font-size: 18px;
+    }
+    .header-actions button {
+        min-height: 44px;
+        padding: 6px 9px;
+        font-size: 12px;
+    }
+    .header-environment .environment-toggle {
+        padding: 6px;
+        font-size: 11px;
+    }
+    .compact-only {
+        display: inline-block;
+    }
+    main {
+        position: relative;
+        display: block;
+        height: calc(100dvh - 64px);
+        min-height: 0;
+    }
+    aside {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: min(264px, 100%);
+        z-index: 5;
+        background: #10171cf2;
+        border-left: 1px solid #30434b;
+        box-shadow: -12px 0 28px #0003;
+    }
+    #fullscreen-toggle {
+        width: auto;
+    }
+    .settings-open aside {
+        display: block;
+    }
+    #play-area {
+        height: 100%;
+        min-height: 0;
+    }
+    .caption {
+        font-size: 9px;
+        bottom: 6px;
+        left: 10px;
+        right: 10px;
+    }
+    .caption span {
+        float: none;
+        display: block;
+    }
+}
+@media (max-aspect-ratio: 4/5) {
+    .touch-enabled #play-area {
+        display: flex;
+        flex-direction: column;
+    }
+    .touch-enabled .canvas-area {
+        flex: 1;
+        height: auto;
+        min-height: 0;
+    }
+    .touch-enabled #touch-controls {
+        position: static;
+        flex: 0 0 auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        background: #10171c;
+    }
+}
+@media (max-width: 400px) {
+    h1 {
+        font-size: 15px;
+    }
+    .header-actions {
+        gap: 3px;
+    }
+    .header-actions button {
+        padding: 6px;
+    }
+    .header-environment {
+        gap: 2px;
+    }
+    .header-environment .environment-toggle {
+        padding: 5px 4px;
+        font-size: 10px;
+    }
+    #touch-controls {
+        gap: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .steering-controls {
+        gap: 4px;
+    }
+    .pedal-controls {
+        gap: 4px;
+        grid-template-columns: 60px 76px;
+    }
+}
+
+@media (max-width: 700px) {
+    .header-environment .environment-state {
+        display: none;
+    }
+    .header-environment .environment-toggle {
+        min-width: 26px;
+        padding: 5px 4px;
+    }
+}
+
+/* Reclaim vertical space on wide screens without changing the world geometry. */
+@media (min-width: 600px) and (min-aspect-ratio: 3/2) {
+    body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) calc(112px + env(safe-area-inset-right));
+    }
+    header {
+        grid-row: 1;
+        grid-column: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 20px;
+        height: 100dvh;
+        padding: max(12px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+            max(12px, env(safe-area-inset-bottom)) 8px;
+        border-bottom: 0;
+        border-left: 1px solid #2a3941;
+        overflow-y: auto;
+    }
+    header small,
+    h1 span {
+        display: none;
+    }
+    h1 {
+        font-size: 17px;
+        text-align: center;
+    }
+    .header-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .header-actions button {
+        min-height: 48px;
+        padding: 8px 4px;
+        font-size: 13px;
+    }
+    .header-environment {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+    }
+    .header-environment .environment-toggle {
+        min-width: 0;
+        min-height: 40px;
+        padding: 4px;
+        font-size: 10px;
+    }
+    main {
+        grid-row: 1;
+        grid-column: 1;
+        height: 100dvh;
+        min-height: 0;
+        min-width: 0;
+    }
+}
+
+/* Website-only navigation, added by copy-release.js. */
+.site-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 4px 8px;
+    color: #85b8b4;
+    font-size: 12px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.site-back:hover,
+.site-back:focus-visible {
+    color: #dbe5e9;
+    text-decoration: underline;
+}
+@media (max-width: 600px) {
+    .site-back {
+        min-width: 40px;
+        padding: 4px;
+        font-size: 20px;
+    }
+    .site-back span {
+        display: none;
+    }
+}
