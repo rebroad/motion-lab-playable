@@ -6,6 +6,12 @@ A self-contained GitHub Pages copy of Pat Kerr's interactive 2D vehicle-physics 
 
 Motion Lab was created by Pat Kerr. The source is republished here with the rights holder's authorization. The in-app **Site** link is only outbound navigation to Pat Kerr's homepage; it is not required by the game.
 
-## Deployment
+## Run locally
 
-GitHub Pages serves `index.html` from the `main` branch root. The app is plain HTML, CSS, and JavaScript and requires no build step or dependencies.
+With Python 3 installed, run:
+
+```sh
+./serve-local.sh
+```
+
+Then open <http://127.0.0.1:8000/>. The server binds to loopback only. To choose another port, pass it as an argument (`./serve-local.sh 8080`) or set `PORT`. Stop it with Ctrl+C. No build step or external runtime assets are needed.
