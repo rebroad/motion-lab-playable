@@ -58,24 +58,32 @@ export class CanvasRenderer {
         for (const tyre of vehicle.dynamics.tyres.filter((t) => !t.steered)) {
             const position = vehicle.body.toWorld(tyre.position);
             const previous = this.skidPrevious.get(tyre);
+            const previousAmount = previous?.amount ?? 0;
+            const amount = tyre.skidAmount ?? 0;
             if (
-                tyre.skidding &&
-                previous?.skidding &&
+                amount > 0 &&
+                previousAmount > 0 &&
                 length(sub(position, previous.position)) > 0.001
             ) {
-                this.skidMarks.push({ from: previous.position, to: position, age: 0 });
+                this.skidMarks.push({
+                    from: previous.position,
+                    to: position,
+                    amount: (previousAmount + amount) / 2,
+                    age: 0,
+                });
             }
-            this.skidPrevious.set(tyre, { position, skidding: tyre.skidding });
+            this.skidPrevious.set(tyre, { position, amount });
         }
         if (this.skidMarks.length > 2600) this.skidMarks.splice(0, this.skidMarks.length - 2600);
     }
     drawSkids() {
         const c = this.ctx;
         c.save();
-        c.lineWidth = 3;
         c.lineCap = 'round';
         for (const mark of this.skidMarks) {
-            c.globalAlpha = 0.8 * (1 - mark.age / this.skidLifetime);
+            const fade = 1 - mark.age / this.skidLifetime;
+            c.globalAlpha = 0.8 * mark.amount * fade;
+            c.lineWidth = 0.75 + 2.25 * mark.amount;
             this.line(mark.from, mark.to, '#f28a72');
         }
         c.restore();

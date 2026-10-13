@@ -1,4 +1,4 @@
-import { vec, add, rotate, scale, dot, resolve } from './math.js';
+import { vec, add, rotate, scale, dot, resolve, clamp } from './math.js';
 
 export const ORIGINAL_ENGINE_FORCE = 6500;
 const REVERSE_THROTTLE_SCALE = 0.75;
@@ -6,6 +6,7 @@ const TYRE_STEERING_ANGLE = 0.55;
 const SKID_SPEED_SCALE = 0.7;
 const SKID_START_THRESHOLD = 1.5;
 const SKID_STOP_THRESHOLD = 0.8;
+const SKID_FULL_THRESHOLD = 5.5;
 const SHIP_THRUST = 5000;
 const SHIP_SIDE_THRUST = 2600;
 
@@ -34,6 +35,9 @@ export class CarDynamics {
                 position: vec(x, y),
                 steered: x > 0,
                 angle: 0,
+                skidding: false,
+                skidAmount: 0,
+                lateralSpeed: 0,
             })),
         );
     }
@@ -42,6 +46,7 @@ export class CarDynamics {
         this.skidding = false;
         for (const tyre of this.tyres ?? []) {
             tyre.skidding = false;
+            tyre.skidAmount = 0;
             tyre.lateralSpeed = 0;
         }
     }
@@ -74,7 +79,16 @@ export class CarDynamics {
             // Hysteresis keeps marks from flickering near the onset threshold.
             // Detect actual sideways motion, not merely a held handbrake.
             const skidThreshold = tyre.skidding ? SKID_STOP_THRESHOLD : SKID_START_THRESHOLD;
-            tyre.skidding = rear && tyre.lateralSpeed * SKID_SPEED_SCALE > skidThreshold;
+            const scaledLateralSpeed = tyre.lateralSpeed * SKID_SPEED_SCALE;
+            tyre.skidding = rear && scaledLateralSpeed > skidThreshold;
+            tyre.skidAmount = tyre.skidding
+                ? clamp(
+                      (scaledLateralSpeed - SKID_STOP_THRESHOLD) /
+                          (SKID_FULL_THRESHOLD - SKID_STOP_THRESHOLD),
+                      0,
+                      1,
+                  )
+                : 0;
             this.skidding ||= tyre.skidding;
             const rollingResistance =
                 this.rollingResistance *
