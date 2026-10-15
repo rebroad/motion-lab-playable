@@ -1,11 +1,11 @@
 import { bindButtonActivation } from './button-activation.js';
-import { RigidBody } from './physics.js?v=0.8.2';
-import { Vehicle, ORIGINAL_ENGINE_FORCE } from './vehicles.js?v=0.8.2';
-import { Input } from './input.js?v=0.8.2';
-import { CanvasRenderer } from './renderer.js?v=0.8.2';
-import { Game } from './game.js?v=0.8.2';
+import { RigidBody } from './physics.js?v=0.8.3';
+import { Vehicle, ORIGINAL_ENGINE_FORCE } from './vehicles.js?v=0.8.3';
+import { Input } from './input.js?v=0.8.3';
+import { CanvasRenderer } from './renderer.js?v=0.8.3';
+import { Game } from './game.js?v=0.8.3';
 import { length } from './math.js';
-import { InputPresentation } from './presentation.js?v=0.8.2';
+import { InputPresentation } from './presentation.js?v=0.8.3';
 
 const $ = (selector) => document.querySelector(selector);
 let presentation;
@@ -17,6 +17,7 @@ const game = new Game(vehicle, input, renderer, () => {
     const b = vehicle.body;
     const speed = length(b.velocity);
     stats.textContent = `speed   ${speed.toFixed(2)} m/s (${(speed / 0.44704).toFixed(1)} mph)\nspin    ${b.angularVelocity.toFixed(2)} rad/s\nstep    ${(game.clock.step * 1000).toFixed(3)} ms\ndropped ${game.clock.dropped.toFixed(3)} s\nfps     ${game.fps === null ? '—' : game.fps.toFixed(1)}`;
+    presentation?.setDriveMode(vehicle.dynamics.driveMode);
 });
 
 function updateAcceleration() {
@@ -99,6 +100,7 @@ function selectVehicleMode(mode) {
     }[mode];
     applyShipControlMode();
     presentation?.setMode(mode);
+    presentation?.setDriveMode(vehicle.dynamics.driveMode);
 }
 
 function resetSimulation() {

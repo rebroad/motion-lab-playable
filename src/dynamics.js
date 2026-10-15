@@ -2,6 +2,8 @@ import { vec, add, rotate, scale, dot, resolve, clamp } from './math.js';
 
 export const ORIGINAL_ENGINE_FORCE = 6500;
 const REVERSE_THROTTLE_SCALE = 0.75;
+const BRAKE_TO_REVERSE_SPEED = 0.65;
+const REVERSE_TO_BRAKE_SPEED = 0.9;
 const TYRE_STEERING_ANGLE = 0.55;
 const SKID_SPEED_SCALE = 0.7;
 const SKID_START_THRESHOLD = 1.5;
@@ -15,6 +17,7 @@ export class CarDynamics {
         engineForce = ORIGINAL_ENGINE_FORCE * 1.5,
         rollingResistance = 32.5,
         lateralResistance = 1100,
+        maxBrakeForce = lateralResistance * 4,
         handbrakeGrip = 0.15,
         handbrakeRollingMultiplier = 8,
         gripRecoveryTime = 0.15,
@@ -24,10 +27,13 @@ export class CarDynamics {
         // Per-tyre damping coefficients in N per (m/s), not Coulomb friction.
         this.rollingResistance = rollingResistance;
         this.lateralResistance = lateralResistance;
+        // Simple total tire-grip ceiling for service braking (one share per tire).
+        this.maxBrakeForce = maxBrakeForce;
         this.handbrakeGrip = handbrakeGrip;
         this.handbrakeStrength = handbrakeStrength;
         this.handbrakeRollingMultiplier = handbrakeRollingMultiplier;
         this.gripRecoveryTime = gripRecoveryTime;
+        this.driveMode = 'reverse';
         this.reset();
         // Inset 0.3 m from the shell sides; drawing and forces share these points.
         this.tyres = [-1.35, 1.35].flatMap((x) =>
@@ -44,6 +50,7 @@ export class CarDynamics {
     reset() {
         this.rearGripLoss = 0;
         this.skidding = false;
+        this.driveMode = 'reverse';
         for (const tyre of this.tyres ?? []) {
             tyre.skidding = false;
             tyre.skidAmount = 0;
@@ -59,10 +66,24 @@ export class CarDynamics {
                   this.rearGripLoss - (this.gripRecoveryTime > 0 ? dt / this.gripRecoveryTime : 1),
               );
         const forward = rotate(vec(1, 0), body.angle);
-        // Decel brakes at full strength until forward motion stops, then reverses gently.
-        const reverseScale =
-            controls.throttle < 0 && dot(body.velocity, forward) <= 0 ? REVERSE_THROTTLE_SCALE : 1;
-        body.addForce(scale(forward, controls.throttle * this.engineForce * reverseScale));
+        const forwardSpeed = dot(body.velocity, forward);
+        if (this.driveMode === 'brake' && forwardSpeed <= BRAKE_TO_REVERSE_SPEED) {
+            this.driveMode = 'reverse';
+        } else if (this.driveMode === 'reverse' && forwardSpeed >= REVERSE_TO_BRAKE_SPEED) {
+            this.driveMode = 'brake';
+        }
+        if (controls.throttle > 0) {
+            body.addForce(scale(forward, controls.throttle * this.engineForce));
+        } else if (controls.throttle < 0) {
+            const braking = this.driveMode === 'brake' && forwardSpeed > 0;
+            const force = braking
+                ? -Math.min(
+                      this.maxBrakeForce,
+                      (forwardSpeed * body.mass) / Math.max(dt, 1e-6),
+                  )
+                : -this.engineForce * REVERSE_THROTTLE_SCALE;
+            body.addForce(scale(forward, force * -controls.throttle));
+        }
         this.skidding = false;
         for (const tyre of this.tyres) {
             tyre.angle = tyre.steered ? controls.turn * TYRE_STEERING_ANGLE : 0;

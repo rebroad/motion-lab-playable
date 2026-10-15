@@ -1,6 +1,6 @@
 import { vec, add, rotate, scale, dot } from './math.js';
 import { RectangleShell, BarbellShell } from './shells.js';
-import { CarDynamics, ShipDynamics, ManualForceDynamics } from './dynamics.js';
+import { CarDynamics, ShipDynamics, ManualForceDynamics } from './dynamics.js?v=0.8.3';
 
 export { Shell, RectangleShell, BarbellShell } from './shells.js';
 export {

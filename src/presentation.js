@@ -141,7 +141,17 @@ export class InputPresentation {
         const action = mode === 'ship' ? 'Boost' : 'Handbrake';
         this.controls.querySelector('[data-control="action"]').textContent = action;
         this.hud.querySelector('[data-indicator="action"]').textContent = action;
+        const decel = mode === 'car' ? 'Rev' : 'Decel';
+        this.controls.querySelector('[data-control="decel"]').textContent = decel;
+        this.hud.querySelector('[data-indicator="decel"]').textContent = decel;
+        this.setDriveMode('reverse');
         this.render();
+    }
+    setDriveMode(mode) {
+        if (this.mode !== 'car') return;
+        const label = mode === 'brake' ? 'Brake' : 'Rev';
+        this.controls.querySelector('[data-control="decel"]').textContent = label;
+        this.hud.querySelector('[data-indicator="decel"]').textContent = label;
     }
     render() {
         const state = this.input.controlState();
