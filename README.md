@@ -6,6 +6,8 @@ A self-contained GitHub Pages copy of Pat Kerr's interactive 2D vehicle-physics 
 
 Motion Lab was created by Pat Kerr. The source is republished here with the rights holder's authorization. The in-app **Site** link is only outbound navigation to Pat Kerr's homepage; it is not required by the game.
 
+View Pat Kerr's original online demo: <https://patkerr.co.uk/motion-lab/>.
+
 ## Run locally
 
 With Python 3 installed, run:
